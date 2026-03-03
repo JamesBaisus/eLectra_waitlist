@@ -451,6 +451,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   </div>
 );
 
+// --- ENHANCED STEP COMPONENT ---
 const Step: React.FC<StepProps> = ({
   number,
   title,
@@ -459,17 +460,24 @@ const Step: React.FC<StepProps> = ({
   borderColor,
   hasPulse,
 }) => (
-  <div className="text-center relative">
+  <div className="text-center relative group">
+    {/* Step Number Container */}
     <div
-      className={`w-20 h-20 mx-auto bg-white rounded-2xl shadow-lg flex items-center justify-center text-2xl font-bold ${color} mb-6 border-2 ${borderColor} relative z-10`}
+      className={`w-20 h-20 mx-auto bg-white rounded-2xl shadow-lg flex items-center justify-center text-2xl font-bold ${color} mb-6 border-2 ${borderColor} relative z-10 transition-transform duration-300 group-hover:scale-110`}
     >
       {number}
+
+      {/* Blinking Pulse Effect */}
       {hasPulse && (
-        <div className="pulse-ring w-full h-full bg-indigo-400 absolute inset-0"></div>
+        <div className="absolute inset-0 rounded-2xl animate-ping opacity-75 bg-indigo-400"></div>
       )}
     </div>
-    <h3 className="text-xl font-bold text-gray-900 mb-3">{title}</h3>
-    <p className="text-gray-600">{description}</p>
+
+    {/* Text Content */}
+    <h3 className="text-xl font-bold text-gray-900 mb-3 transition-colors duration-300 group-hover:text-indigo-600">
+      {title}
+    </h3>
+    <p className="text-gray-600 leading-relaxed">{description}</p>
   </div>
 );
 
@@ -555,7 +563,7 @@ function App() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300 ;400;500;600;700;800&display=swap');
         
         body {
           font-family: 'Inter', sans-serif;
@@ -658,7 +666,7 @@ function App() {
         }
         
         .wave-bg {
-          background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23f3f4f6' fill-opacity='1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+          background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg ' viewBox='0 0 1440 320'%3E%3Cpath fill='%23f3f4f6' fill-opacity='1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
           background-size: cover;
           background-position: center;
         }
@@ -701,6 +709,18 @@ function App() {
 
         .zoom-in {
           animation-name: zoom-in;
+        }
+
+        /* --- NEW ANIMATION FOR CONNECTING LINE --- */
+        @keyframes flowLine {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 100% 50%; }
+        }
+        
+        .flowing-line {
+          background: linear-gradient(90deg, #e0e7ff, #c7d2fe, #e0e7ff);
+          background-size: 200% 100%;
+          animation: flowLine 3s linear infinite;
         }
       `}</style>
 
@@ -747,9 +767,6 @@ function App() {
               </div>
 
               <div className="flex items-center gap-4">
-                <button className="hidden sm:block text-sm font-medium text-gray-600 hover:text-gray-900">
-                  Sign In
-                </button>
                 <button
                   onClick={() => setIsWaitlistOpen(true)}
                   className="px-5 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-full hover:bg-gray-800 transition-all hover:scale-105 shadow-lg shadow-gray-900/20"
@@ -962,13 +979,12 @@ function App() {
           </div>
         </section>
 
-        {/* How It Works */}
         <section
           id="how-it-works"
-          className="py-24"
+          className="py-24 bg-white" // Added bg-white to ensure line contrast if needed, though bg-[#fafafa] is parent
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16 animate-on-scroll">
+            <div className="text-center mb-20 animate-on-scroll">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                 How eLectra Works
               </h2>
@@ -978,7 +994,14 @@ function App() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-12 relative">
-              <div className="hidden md:block absolute top-1/4 left-0 w-full h-0.5 bg-linear-to-r from-indigo-200 via-purple-200 to-pink-200 -z-10"></div>
+              {/* 
+                CONNECTING LINE ANIMATION 
+                - Hidden on mobile
+                - Uses 'flowing-line' class for the gradient animation
+              */}
+              <div className="hidden md:block absolute top-10 left-0 w-full h-1 -z-0 px-20">
+                <div className="w-full h-full flowing-line rounded-full opacity-60"></div>
+              </div>
 
               <div className="animate-on-scroll">
                 <Step

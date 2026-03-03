@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Rounded square background -->
+  <rect x="0" y="0" width="512" height="512" rx="96" ry="96" fill="#000000"/>
+
+  <!-- Open book: left page -->
+  <path d="M256 148 C220 138, 160 130, 108 140 L108 340 C160 330, 220 338, 256 348 Z" fill="none" stroke="#ffffff" stroke-width="18" stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- Open book: right page -->
+  <path d="M256 148 C292 138, 352 130, 404 140 L404 340 C352 330, 292 338, 256 348 Z" fill="none" stroke="#ffffff" stroke-width="18" stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- Book spine -->
+  <line x1="256" y1="148" x2="256" y2="348" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+
+  <!-- Lightning bolt cutting through the book -->
+  <polygon points="290,88 242,232 292,228 222,400 340,208 280,212" fill="#ffffff"/>
+
+  <!-- Inner cutout to give bolt dimension -->
+  <polygon points="286,120 252,218 288,215 238,360 324,222 278,225" fill="#000000"/>
+</svg>
