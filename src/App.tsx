@@ -58,6 +58,48 @@ interface TestimonialProps {
   gradient: string;
 }
 
+// --- NEW: Video Modal Component ---
+interface VideoModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+        onClick={onClose}
+      ></div>
+
+      {/* Modal Content */}
+      <div className="relative w-full max-w-5xl aspect-video bg-black rounded-2xl shadow-2xl overflow-hidden transform transition-all animate-in fade-in zoom-in duration-300 border border-gray-800">
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors backdrop-blur-md"
+        >
+          <X className="w-6 h-6" />
+        </button>
+
+        {/* Video Player */}
+        <video
+          className="w-full h-full"
+          controls
+          autoPlay
+          playsInline
+          src="/Lectra_AI.mp4" // Assumes file is in public folder
+        >
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  );
+};
+
 // Waitlist Modal Component
 interface WaitlistModalProps {
   isOpen: boolean;
@@ -106,7 +148,7 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
@@ -120,7 +162,7 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose }) => {
         </button>
 
         <div className="text-center mb-6">
-          <div className="w-16 h-16 bg-linear-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Mail className="w-8 h-8 text-white" />
           </div>
           <h3 className="text-2xl font-bold text-gray-900 mb-2">
@@ -218,7 +260,7 @@ const SubtleBackgroundBook: React.FC = () => {
     <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden z-0 flex items-center justify-center">
       {/* Container for the book - fills most of viewport */}
       <div
-        className="relative w-[120vw] h-[120vh] max-w-450 max-h-300"
+        className="relative w-[120vw] h-[120vh] max-w-[450px] max-h-[300px]"
         style={{
           perspective: "2000px",
           transformStyle: "preserve-3d",
@@ -437,11 +479,11 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 }) => (
   <div className="glass-card rounded-3xl p-8 card-hover relative overflow-hidden group">
     <div
-      className={`absolute top-0 right-0 w-32 h-32 bg-linear-to-br ${color} rounded-full -mr-16 -mt-16 opacity-50 group-hover:scale-110 transition-transform`}
+      className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${color} rounded-full -mr-16 -mt-16 opacity-50 group-hover:scale-110 transition-transform`}
     ></div>
     <div className="relative z-10">
       <div
-        className={`w-14 h-14 rounded-2xl ${color} ${textColor} flex items-center justify-center mb-6`}
+        className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${color} ${textColor} flex items-center justify-center mb-6`}
       >
         {icon}
       </div>
@@ -500,7 +542,7 @@ const Testimonial: React.FC<TestimonialProps> = ({
     <p className="text-gray-300 mb-6">{quote}</p>
     <div className="flex items-center gap-3">
       <div
-        className={`w-10 h-10 rounded-full bg-linear-to-br ${gradient} flex items-center justify-center font-bold text-white`}
+        className={`w-10 h-10 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center font-bold text-white`}
       >
         {initials}
       </div>
@@ -515,6 +557,8 @@ const Testimonial: React.FC<TestimonialProps> = ({
 function App() {
   const [scrolled, setScrolled] = useState(false);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
+  // --- NEW: State for Video Modal ---
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -563,7 +607,7 @@ function App() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300 ;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
         body {
           font-family: 'Inter', sans-serif;
@@ -666,7 +710,7 @@ function App() {
         }
         
         .wave-bg {
-          background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg ' viewBox='0 0 1440 320'%3E%3Cpath fill='%23f3f4f6' fill-opacity='1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+          background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23f3f4f6' fill-opacity='1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
           background-size: cover;
           background-position: center;
         }
@@ -724,9 +768,14 @@ function App() {
         }
       `}</style>
 
+      {/* --- Render Modals --- */}
       <WaitlistModal
         isOpen={isWaitlistOpen}
         onClose={() => setIsWaitlistOpen(false)}
+      />
+      <VideoModal
+        isOpen={isVideoOpen}
+        onClose={() => setIsVideoOpen(false)}
       />
 
       <main className="text-gray-800 antialiased bg-[#fafafa] overflow-x-hidden min-h-screen">
@@ -853,7 +902,11 @@ function App() {
                 Join Waitlist
                 <ArrowRight className="w-5 h-5" />
               </button>
-              <button className="px-8 py-4 bg-white text-gray-900 border-2 border-gray-200 rounded-full font-semibold text-lg hover:border-gray-300 hover:bg-gray-50 transition-all flex items-center gap-2">
+              {/* --- UPDATED: Watch Demo Button --- */}
+              <button
+                onClick={() => setIsVideoOpen(true)}
+                className="px-8 py-4 bg-white text-gray-900 border-2 border-gray-200 rounded-full font-semibold text-lg hover:border-gray-300 hover:bg-gray-50 transition-all flex items-center gap-2"
+              >
                 <PlayCircle className="w-5 h-5" />
                 Watch Demo
               </button>
@@ -979,7 +1032,7 @@ function App() {
 
         <section
           id="how-it-works"
-          className="py-24 bg-white" // Added bg-white to ensure line contrast if needed, though bg-[#fafafa] is parent
+          className="py-24 bg-white"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-20 animate-on-scroll">
@@ -992,11 +1045,6 @@ function App() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-12 relative">
-              {/* 
-                CONNECTING LINE ANIMATION 
-                - Hidden on mobile
-                - Uses 'flowing-line' class for the gradient animation
-              */}
               <div className="hidden md:block absolute top-10 left-0 w-full h-1 -z-0 px-20">
                 <div className="w-full h-full flowing-line rounded-full opacity-60"></div>
               </div>
