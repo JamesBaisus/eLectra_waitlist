@@ -737,11 +737,9 @@ function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-slate-900 rounded-2xl flex items-center justify-center">
-                  <BookOpen className="w-4 h-4 text-white" />
-                </div>
+                <img className="w-7" src="src\assets\LECTRA-logo-round.png" alt="Lectra Logo" />
                 <span className="font-bold text-xl tracking-tight text-gray-900">
-                  eLectra
+                  Lectra
                 </span>
               </div>
 
@@ -832,7 +830,7 @@ function App() {
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 border border-gray-200 shadow-sm mb-8 animate-on-scroll">
               <span className="flex h-2 w-2 rounded-full bg-green-500"></span>
               <span className="text-sm font-medium text-gray-600">
-                Trusted by 10,000+ students worldwide
+                Join over 5,000 students that waitlisted in the first week!
               </span>
             </div>
 
@@ -873,10 +871,10 @@ function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16 animate-on-scroll">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Who eLectra Helps
+                Who Lectra Helps
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                Tailored learning experiences for every type of student
+                Tailored learning experiences for every type of learners
               </p>
             </div>
 
@@ -902,7 +900,7 @@ function App() {
               <div className="animate-on-scroll">
                 <FeatureCard
                   icon={<Building2 className="w-7 h-7" />}
-                  title="Educational Institutions & Groups"
+                  title="Educational Institutions"
                   description="Empower your institution with admin dashboards, curriculum management, student progress tracking, and collaborative learning environments."
                   color="from-green-100 to-teal-100"
                   textColor="text-green-600"
@@ -986,7 +984,7 @@ function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-20 animate-on-scroll">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                How eLectra Works
+                How Lectra Works
               </h2>
               <p className="text-gray-600">
                 Three simple steps to transform your learning
@@ -1007,7 +1005,7 @@ function App() {
                 <Step
                   number="1"
                   title="Feed Your Material"
-                  description="Upload your slides or notes and eLectra turns overwhelming lectures into clear, high-yield summaries—highlighting the key concepts, relationships, and exam priorities so you know exactly what to study."
+                  description="Upload your slides or notes and Lectra turns overwhelming lectures into clear, high-yield summaries—highlighting the key concepts, relationships, and exam priorities so you know exactly what to study."
                   color="text-indigo-600"
                   borderColor="border-indigo-100"
                   hasPulse={true}
@@ -1017,7 +1015,7 @@ function App() {
                 <Step
                   number="2"
                   title="Visualize & Understand"
-                  description="Instead of forcing you to reread dense material, eLectra converts complex topics into visual explanations like concept maps, step-by-step processes, and comparisons that make ideas easier to understand and remember."
+                  description="Instead of forcing you to reread dense material, Lectra converts complex topics into visual explanations like concept maps, step-by-step processes, and comparisons that make ideas easier to understand and remember."
                   color="text-purple-600"
                   borderColor="border-purple-100"
                 />
@@ -1045,15 +1043,15 @@ function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center mb-16 animate-on-scroll">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Loved by Students
+                First User Experiences
               </h2>
-              <p className="text-gray-400">See how eLectra is changing lives</p>
+              <p className="text-gray-400">See how Lectra is changing lives</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
               <div className="animate-on-scroll">
                 <Testimonial
-                  quote="eLectra helped me go from a C student to straight A's. The AI planner knows exactly when I need to review material."
+                  quote="Lectra helped me go from a C student to straight A's. The AI planner knows exactly when I need to review material."
                   initials="JM"
                   name="Jessica M."
                   role="Biology Major"
@@ -1092,7 +1090,7 @@ function App() {
                     <BookOpen className="w-4 h-4 text-white" />
                   </div>
                   <span className="font-bold text-lg text-gray-900">
-                    eLectra
+                    Lectra
                   </span>
                 </div>
                 <p className="text-gray-600 mb-4 max-w-sm">
@@ -1160,7 +1158,7 @@ function App() {
 
             <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-sm text-gray-500">
-                © 2026 eLectra. All rights reserved.
+                © 2026 Lectra. All rights reserved.
               </p>
               <div className="flex gap-6 text-sm text-gray-500">
                 <a
