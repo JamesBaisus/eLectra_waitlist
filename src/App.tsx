@@ -20,6 +20,8 @@ import {
   Loader2,
   Mail,
   User,
+  Instagram,
+  Facebook,
 } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 
@@ -58,6 +60,36 @@ interface TestimonialProps {
   gradient: string;
 }
 
+// Custom TikTok icon since Lucide doesn't have it
+const TikTokIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className="w-4 h-4"
+  >
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+  </svg>
+);
+
+const platformIcons: Record<string, React.ReactNode> = {
+  instagram: <Instagram className="w-4 h-4" />,
+  facebook: <Facebook className="w-4 h-4" />,
+  twitter: <Twitter className="w-4 h-4" />,
+  tiktok: <TikTokIcon />,
+  linkedin: <Linkedin className="w-4 h-4" />,
+  other: <span className="text-xs font-medium">@</span>,
+};
+
+const platformColors: Record<string, string> = {
+  instagram:
+    "bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white",
+  facebook: "bg-blue-600 text-white",
+  twitter: "bg-black text-white",
+  tiktok: "bg-black text-white",
+  linkedin: "bg-blue-700 text-white",
+  other: "bg-gray-200 text-gray-600",
+};
+
 // --- NEW: Video Modal Component ---
 interface VideoModalProps {
   isOpen: boolean;
@@ -68,7 +100,7 @@ const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
@@ -91,7 +123,7 @@ const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose }) => {
           controls
           autoPlay
           playsInline
-          src="/Lectra_AI.mp4" // Assumes file is in public folder
+          src="/Lectra_AI.mp4"
         >
           Your browser does not support the video tag.
         </video>
@@ -114,6 +146,8 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose }) => {
     "idle" | "success" | "error"
   >("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [socialPlatform, setSocialPlatform] = useState("instagram");
+  const [socialUsername, setSocialUsername] = useState("");
 
   if (!isOpen) return null;
 
@@ -124,15 +158,28 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose }) => {
     setErrorMessage("");
 
     try {
-      const { error } = await supabase
-        .from("UserWaitList")
-        .insert([{ name, email, created_at: new Date().toISOString() }]);
+      const payload: any = {
+        name,
+        email,
+        created_at: new Date().toISOString(),
+      };
+
+      // Only add social media if username is provided
+      if (socialUsername.trim()) {
+        payload.social_platform = socialPlatform;
+        payload.social_username = socialUsername.trim();
+      }
+
+      const { error } = await supabase.from("UserWaitList").insert([payload]);
 
       if (error) throw error;
 
       setSubmitStatus("success");
       setName("");
       setEmail("");
+      setSocialUsername("");
+      setSocialPlatform("instagram");
+
       setTimeout(() => {
         onClose();
         setSubmitStatus("idle");
@@ -148,7 +195,7 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
@@ -162,7 +209,7 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose }) => {
         </button>
 
         <div className="text-center mb-6">
-          <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-linear-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Mail className="w-8 h-8 text-white" />
           </div>
           <h3 className="text-2xl font-bold text-gray-900 mb-2">
@@ -223,6 +270,90 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
 
+            {/* Social Media Input with Icons */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Social Media{" "}
+                <span className="text-gray-400 font-normal">(Optional)</span>
+              </label>
+              <div className="flex gap-2">
+                {/* Platform Selector with Icon */}
+                <div className="relative">
+                  <select
+                    value={socialPlatform}
+                    onChange={(e) => setSocialPlatform(e.target.value)}
+                    className="appearance-none pl-9 pr-8 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all text-sm bg-white cursor-pointer"
+                  >
+                    <option value="instagram">Instagram</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="twitter">Twitter/X</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="other">Other</option>
+                  </select>
+
+                  {/* Icon inside select */}
+                  <div
+                    className={`absolute left-2 top-1/2 transform -translate-y-1/2 w-5 h-5 rounded-md flex items-center justify-center ${platformColors[socialPlatform]}`}
+                  >
+                    {platformIcons[socialPlatform]}
+                  </div>
+
+                  {/* Dropdown arrow */}
+                  <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                    <svg
+                      className="w-4 h-4 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Username Input */}
+                <div className="relative flex-1">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 font-medium text-sm">
+                    @
+                  </span>
+                  <input
+                    type="text"
+                    value={socialUsername}
+                    onChange={(e) => setSocialUsername(e.target.value)}
+                    placeholder="username"
+                    className="w-full pl-7 pr-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Platform preview when typing */}
+              {socialUsername && (
+                <div className="mt-2 flex items-center gap-2 text-sm text-gray-600">
+                  <div
+                    className={`w-6 h-6 rounded-md flex items-center justify-center ${platformColors[socialPlatform]}`}
+                  >
+                    {platformIcons[socialPlatform]}
+                  </div>
+                  <span className="text-gray-500">Preview:</span>
+                  <span className="font-medium text-gray-900">
+                    {socialPlatform === "instagram" && "instagram.com/"}
+                    {socialPlatform === "facebook" && "facebook.com/"}
+                    {socialPlatform === "twitter" && "x.com/"}
+                    {socialPlatform === "tiktok" && "tiktok.com/@"}
+                    {socialPlatform === "linkedin" && "linkedin.com/in/"}
+                    {socialPlatform === "other" && ""}
+                    {socialUsername}
+                  </span>
+                </div>
+              )}
+            </div>
+
             {submitStatus === "error" && (
               <div className="p-3 rounded-lg bg-red-50 text-red-600 text-sm">
                 {errorMessage}
@@ -260,7 +391,7 @@ const SubtleBackgroundBook: React.FC = () => {
     <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden z-0 flex items-center justify-center">
       {/* Container for the book - fills most of viewport */}
       <div
-        className="relative w-[120vw] h-[120vh] max-w-[450px] max-h-[300px]"
+        className="relative w-[120vw] h-[120vh] max-w-112.5 max-h-75"
         style={{
           perspective: "2000px",
           transformStyle: "preserve-3d",
@@ -479,11 +610,11 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 }) => (
   <div className="glass-card rounded-3xl p-8 card-hover relative overflow-hidden group">
     <div
-      className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${color} rounded-full -mr-16 -mt-16 opacity-50 group-hover:scale-110 transition-transform`}
+      className={`absolute top-0 right-0 w-32 h-32 bg-linear-to-br ${color} rounded-full -mr-16 -mt-16 opacity-50 group-hover:scale-110 transition-transform`}
     ></div>
     <div className="relative z-10">
       <div
-        className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${color} ${textColor} flex items-center justify-center mb-6`}
+        className={`w-14 h-14 rounded-2xl bg-linear-to-br ${color} ${textColor} flex items-center justify-center mb-6`}
       >
         {icon}
       </div>
@@ -542,7 +673,7 @@ const Testimonial: React.FC<TestimonialProps> = ({
     <p className="text-gray-300 mb-6">{quote}</p>
     <div className="flex items-center gap-3">
       <div
-        className={`w-10 h-10 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center font-bold text-white`}
+        className={`w-10 h-10 rounded-full bg-linear-to-br ${gradient} flex items-center justify-center font-bold text-white`}
       >
         {initials}
       </div>
@@ -607,7 +738,7 @@ function App() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300 ;400;500;600;700;800&display=swap');
         
         body {
           font-family: 'Inter', sans-serif;
@@ -710,7 +841,7 @@ function App() {
         }
         
         .wave-bg {
-          background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23f3f4f6' fill-opacity='1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+          background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg ' viewBox='0 0 1440 320'%3E%3Cpath fill='%23f3f4f6' fill-opacity='1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
           background-size: cover;
           background-position: center;
         }
@@ -786,9 +917,13 @@ function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <img className="w-7" src="src\assets\LECTRA-logo-round.png" alt="Lectra Logo" />
-                <span className="font-bold text-xl tracking-tight text-gray-900">
-                  Lectra
+                <img
+                  className="w-15"
+                  src="src\assets\LECTRA-logo-round.png"
+                  alt="Lectra Logo"
+                />
+                <span className="font-bold text-2xl tracking-tight text-gray-900">
+                  Lectra.ai
                 </span>
               </div>
 
